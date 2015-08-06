@@ -80,7 +80,7 @@ angular.module('angularCharts').directive('acChart', [
       var config = {
           title: '',
           tooltips: true,
-          labels: false,
+          labels: true,
           mouseover: function () {
           },
           mouseout: function () {
@@ -646,9 +646,20 @@ angular.module('angularCharts').directive('acChart', [
         });
         if (!!config.labels) {
           path.append('text').attr('transform', function (d) {
-            return 'translate(' + arc.centroid(d) + ')';
-          }).attr('dy', '.35em').style('text-anchor', 'middle').text(function (d) {
-            return d.data.y[0];
+            var c = arc.centroid(d), x = c[0], y = c[1],
+              // pythagorean theorem for hypotenuse
+              h = Math.sqrt(x * x + y * y);
+            return 'translate(' + x / h * (radius + 10) + ',' + y / h * (radius + 10) + ')';
+          }).attr('class', 'pie-chart-label').style('text-anchor', function (d) {
+            // are we past the center?
+            return (d.endAngle + d.startAngle) / 2 > Math.PI ? 'end' : 'start';
+          }).text(function (d) {
+            return d.data.x;
+          }).each(function (d) {
+            var bbox = this.getBBox();
+            d.sx = d.x - bbox.width / 2 - 2;
+            d.ox = d.x + bbox.width / 2 + 2;
+            d.sy = d.oy = d.y + 5;
           });
         }
         function tweenPie(b) {

@@ -34,10 +34,10 @@ function MainController($scope) {
 		}]
 	}
 
-	$scope.chartType = 'bar';
+	$scope.chartType = 'pie';
 
 	$scope.config1 = {
-		labels: false,
+		labels: true,
 		title: "Products",
 		legend: {
 			display: true,
@@ -47,7 +47,7 @@ function MainController($scope) {
 	};
 
 	$scope.config2 = {
-		labels: false,
+		labels: true,
 		title: "HTML-enabled legend",
 		legend: {
 			display: true,
