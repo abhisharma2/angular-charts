@@ -644,6 +644,7 @@ angular.module('angularCharts').directive('acChart', [
             });
           }
         });
+        var prev;
         if (!!config.labels) {
           path.append('text').attr('transform', function (d) {
             var c = arc.centroid(d), x = c[0], y = c[1],
@@ -655,11 +656,16 @@ angular.module('angularCharts').directive('acChart', [
             return (d.endAngle + d.startAngle) / 2 > Math.PI ? 'end' : 'start';
           }).text(function (d) {
             return d.data.x;
-          }).each(function (d) {
-            var bbox = this.getBBox();
-            d.sx = d.x - bbox.width / 2 - 2;
-            d.ox = d.x + bbox.width / 2 + 2;
-            d.sy = d.oy = d.y + 5;
+          }).each(function (d, i) {
+            if (i > 0) {
+              var thisbb = this.getBoundingClientRect(), prevbb = prev.getBoundingClientRect();
+              // move if they overlap
+              if (!(thisbb.right < prevbb.left || thisbb.left > prevbb.right || thisbb.bottom < prevbb.top || thisbb.top > prevbb.bottom)) {
+                var ctx = thisbb.left + (thisbb.right - thisbb.left) / 2, cty = thisbb.top + (thisbb.bottom - thisbb.top) / 2, cpx = prevbb.left + (prevbb.right - prevbb.left) / 2, cpy = prevbb.top + (prevbb.bottom - prevbb.top) / 2, off = Math.sqrt(Math.pow(ctx - cpx, 2) + Math.pow(cty - cpy, 2)) / 2;
+                d3.select(this).attr('transform', 'translate(' + Math.cos((d.startAngle + d.endAngle - Math.PI) / 2) * (radius + textOffset + off) + ',' + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (radius + textOffset + off) + ')');
+              }
+            }
+            prev = this;
           });
         }
         function tweenPie(b) {
