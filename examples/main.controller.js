@@ -61,46 +61,6 @@ function MainController($scope) {
     }, {
       x: "Expense",
       y: [351, 50, 25]
-    },{
-      x: "Sales",
-      y: [100, 500, 0],
-      tooltip: "this is tooltip"
-    }, {
-      x: "Income",
-      y: [300, 100, 100]
-    }, {
-      x: "Expense",
-      y: [351, 50, 25]
-    },{
-      x: "Sales",
-      y: [100, 500, 0],
-      tooltip: "this is tooltip"
-    }, {
-      x: "Income",
-      y: [300, 100, 100]
-    }, {
-      x: "Expense",
-      y: [351, 50, 25]
-    },{
-      x: "Sales",
-      y: [100, 500, 0],
-      tooltip: "this is tooltip"
-    }, {
-      x: "Income",
-      y: [300, 100, 100]
-    }, {
-      x: "Expense",
-      y: [351, 50, 25]
-    },{
-      x: "Sales",
-      y: [100, 500, 0],
-      tooltip: "this is tooltip"
-    }, {
-      x: "Income",
-      y: [300, 100, 100]
-    }, {
-      x: "Expense",
-      y: [351, 50, 25]
     }]
   }
 

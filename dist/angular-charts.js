@@ -644,29 +644,56 @@ angular.module('angularCharts').directive('acChart', [
             });
           }
         });
-        var prev;
         if (!!config.labels) {
           path.append('text').attr('transform', function (d) {
             var c = arc.centroid(d), x = c[0], y = c[1],
               // pythagorean theorem for hypotenuse
               h = Math.sqrt(x * x + y * y);
-            return 'translate(' + x / h * (radius + 10) + ',' + y / h * (radius + 10) + ')';
-          }).attr('class', 'pie-chart-label').style('text-anchor', function (d) {
-            // are we past the center?
-            return (d.endAngle + d.startAngle) / 2 > Math.PI ? 'end' : 'start';
-          }).text(function (d) {
+            return 'translate(' + (x / h * (radius + 40) - 30) + ',' + y / h * (radius + 40) + ')';
+          }).attr('class', 'pie-chart-label').text(function (d) {
             return d.data.x;
-          }).each(function (d, i) {
-            if (i > 0) {
-              var thisbb = this.getBoundingClientRect(), prevbb = prev.getBoundingClientRect();
-              // move if they overlap
-              if (!(thisbb.right < prevbb.left || thisbb.left > prevbb.right || thisbb.bottom < prevbb.top || thisbb.top > prevbb.bottom)) {
-                var ctx = thisbb.left + (thisbb.right - thisbb.left) / 2, cty = thisbb.top + (thisbb.bottom - thisbb.top) / 2, cpx = prevbb.left + (prevbb.right - prevbb.left) / 2, cpy = prevbb.top + (prevbb.bottom - prevbb.top) / 2, off = Math.sqrt(Math.pow(ctx - cpx, 2) + Math.pow(cty - cpy, 2)) / 2;
-                d3.select(this).attr('transform', 'translate(' + Math.cos((d.startAngle + d.endAngle - Math.PI) / 2) * (radius + textOffset + off) + ',' + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (radius + textOffset + off) + ')');
-              }
-            }
-            prev = this;
+          }).each(function (d) {
+            var bb = this.getBBox(), center = arc.centroid(d);
+            var topLeft = {
+                x: center[0] + bb.x,
+                y: center[1] + bb.y
+              };
+            var topRight = {
+                x: topLeft.x + bb.width,
+                y: topLeft.y
+              };
+            var bottomLeft = {
+                x: topLeft.x,
+                y: topLeft.y + bb.height
+              };
+            var bottomRight = {
+                x: topLeft.x + bb.width,
+                y: topLeft.y + bb.height
+              };
+            var value = 0;
+            if (pointIsInArc(topLeft, d, arc))
+              value++;
+            if (pointIsInArc(bottomLeft, d, arc))
+              value++;
+            if (pointIsInArc(topRight, d, arc))
+              value++;
+            if (pointIsInArc(bottomRight, d, arc))
+              value++;
+            d.visible = value >= 1;
+          }).style('display', function (d) {
+            return d.visible ? null : 'none';
           });
+        }
+        function pointIsInArc(pt, ptData, d3Arc) {
+          // Center of the arc is assumed to be 0,0
+          // (pt.x, pt.y) are assumed to be relative to the center
+          var r1 = d3Arc.innerRadius()(ptData),
+            // Note: Using the innerRadius
+            r2 = d3Arc.outerRadius()(ptData), theta1 = d3Arc.startAngle()(ptData), theta2 = d3Arc.endAngle()(ptData);
+          var dist = pt.x * pt.x + pt.y * pt.y, angle = Math.atan2(pt.x, -pt.y);
+          // Note: different coordinate system.
+          angle = angle < 0 ? angle + Math.PI * 2 : angle;
+          return r1 * r1 <= dist && dist <= r2 * r2 && theta1 <= angle && angle <= theta2;
         }
         function tweenPie(b) {
           b.innerRadius = 0;
