@@ -879,54 +879,54 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
 
       if (!!config.labels) {
         path.append("text")
-            .attr("transform", function(d) {
-              var c = arc.centroid(d),
-                  x = c[0],
-                  y = c[1],
-                  // pythagorean theorem for hypotenuse
-                  h = Math.sqrt(x*x + y*y);
-              return "translate(" + (x/h * (radius + 40) - 30) +  ',' +
-                 (y/h * (radius + 40)) +  ")";
-            })
-            .attr("class", "pie-chart-label")
-            .text(function(d) {
-              return d.data.x;
-            })
-            .each(function (d) {
-             var bb = this.getBBox(),
-                 center = arc.centroid(d);
+            // .attr("transform", function(d) {
+              // var c = arc.centroid(d),
+                  // x = c[0],
+                  // y = c[1],
+                  // // pythagorean theorem for hypotenuse
+                  // h = Math.sqrt(x*x + y*y);
+              // return "translate(" + (x/h * (radius + 40) - 30) +  ',' +
+                 // (y/h * (radius + 40)) +  ")";
+            // })
+            // .attr("class", "pie-chart-label")
+            // .text(function(d) {
+              // return d.data.x;
+            // })
+            // .each(function (d) {
+             // var bb = this.getBBox(),
+                 // center = arc.centroid(d);
 
-             var topLeft = {
-               x : center[0] + bb.x,
-               y : center[1] + bb.y
-             };
+             // var topLeft = {
+               // x : center[0] + bb.x,
+               // y : center[1] + bb.y
+             // };
 
-             var topRight = {
-               x : topLeft.x + bb.width,
-               y : topLeft.y
-             };
+             // var topRight = {
+               // x : topLeft.x + bb.width,
+               // y : topLeft.y
+             // };
 
-             var bottomLeft = {
-               x : topLeft.x,
-               y : topLeft.y + bb.height
-             };
+             // var bottomLeft = {
+               // x : topLeft.x,
+               // y : topLeft.y + bb.height
+             // };
 
-             var bottomRight = {
-               x : topLeft.x + bb.width,
-               y : topLeft.y + bb.height
-             };
+             // var bottomRight = {
+               // x : topLeft.x + bb.width,
+               // y : topLeft.y + bb.height
+             // };
 
-             var value = 0;
+             // var value = 0;
 
-             if (pointIsInArc(topLeft, d, arc)) value ++
-             if (pointIsInArc(bottomLeft, d, arc)) value ++
-             if (pointIsInArc(topRight, d, arc)) value ++
-             if (pointIsInArc(bottomRight, d, arc)) value ++
+             // if (pointIsInArc(topLeft, d, arc)) value ++
+             // if (pointIsInArc(bottomLeft, d, arc)) value ++
+             // if (pointIsInArc(topRight, d, arc)) value ++
+             // if (pointIsInArc(bottomRight, d, arc)) value ++
 
-             d.visible = value >= 1
+             // d.visible = value >= 1
 
-            })
-            .style('display', function (d) { return d.visible ? null : "none"; });
+            // })
+            // .style('display', function (d) { return d.visible ? null : "none"; });
       }
 
       function pointIsInArc(pt, ptData, d3Arc) {
