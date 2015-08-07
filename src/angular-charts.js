@@ -784,7 +784,7 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
      * @return {[type]} [description]
      */
     function pieChart() {
-      var radius = Math.min(width, height) / 2;
+      var radius = Math.min(width, height) / 3;
       var svg = d3.select(chartContainer[0]).append("svg")
         .attr("width", width)
         .attr("height", height)
